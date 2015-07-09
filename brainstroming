@@ -1,0 +1,17 @@
+
+string = '<p class="foo bar class_2" id="baz" >Hello</p>'
+
+string.match(regex)
+string.match(regex).captures.first
+
+:name
+regex_name = /<(.*?)\s/
+
+:text
+regex = />(.*?)<\//
+
+:class
+regex = /class="(.*?)"/
+
+:id
+regex = /id="(.*?)"/
