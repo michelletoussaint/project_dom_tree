@@ -5,7 +5,7 @@ string.match(regex)
 string.match(regex).captures.first
 
 :name
-regex_name = /<(.*?)\s/
+regex_name = /<(\w*?)[\s|>]/
 
 :text
 regex = />(.*?)<\//
@@ -32,13 +32,63 @@ regex = /id="(.*?)"/
   </body>
 </html>
 
+      html
+        |
+  [head, body]
+  | |
+  [title] [div]
+  |
+  [h1, p]
+
+
+"<html><head><div><div></div><li></li></div></head></html>"
+
+************ Option 1 - Stack **********
+
+tags = ["<html>", head, div]
+node div
+node li
+
+****** Option 2 - Recursive ******
+
+    first_tag = 'whole text'.match(regex for matching the whole first tag) --> "<html>"
+    closing_tag = first_tag + "/" after <
+
+    look for closing tag
+      if you see another first_tag, then look for two closing tags
+    end
+
+parent = node
+
+arr = <html>, <hea
+
+arr.each do |tag|
+
+  parse(tag)
+  if !imm_closeingtag
+   
+  stack << head
+  node.children<< <head>
+  node.children.each do |child|
+   
+  node.parent = parent
+   
+  else
+  node = node.parent
+  end
 
 
 
+******** read lines **********
 
+read = <head><title>This is a test page</title></head><body><div class="top-div">I'm an outer div!!!<div class="inner-div"</div></div></body></html>
 
+readlines = [, <head>, 
+  <title>, This is a test page,
+  </title>, </head>]
 
-
+root document
+node = html
 
 
 
