@@ -10,18 +10,25 @@ class Parse
 
   end
 
+  # <html><head><title>
+
+
+
   def read_doc(string)
     stack = []
     regex = /<\w.*?>/
+    previous_text =""
 
-    first_tag = string.match(regex)
+    first_tag = string.match(regex).to_s
     stack << first_tag
-
-    string = string [first_tag.length...-1]
-
-
-
+    puts stack.inspect
+    # string = string [first_tag.length...-1]
+    previous_text = string.match(regex).pre_match
+    string = string.match(regex).post_match
+    puts string
   end
+
+
 
 
   def parse_tag(string)
