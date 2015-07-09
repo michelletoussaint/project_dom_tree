@@ -15,3 +15,31 @@ regex = /class="(.*?)"/
 
 :id
 regex = /id="(.*?)"/
+
+///////////////////////////
+
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div class="foo">
+      <h1>
+        Some Text
+      </h1>
+      <p></p>
+    </div>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
