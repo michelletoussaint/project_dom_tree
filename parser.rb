@@ -62,6 +62,9 @@ class Parse
 
   end
 
+  def write_to
+  end
+
 
   def convert_to_array(string)
     string_array = []
@@ -150,45 +153,97 @@ class TreeSearcher
     @tree = tree
   end
 
-  # search(:classes)
-  def search_by(name, value)
-    node = @tree.root
+  def search_children(some_node, attribute, value)
+    search_by(attribute, value, some_node)
+  end
+
+  def search_ancestors(node, attribute, value)
+    mem_value = false
+    match_array = []
+
+    until node == nil
+      node.each_pair do |member, val|
+        if member == attribute
+          mem_value = val
+        end
+      end
+      
+      if mem_value.is_a?(Array)
+        if mem_value.include?(value)
+            match_array << node
+        end
+      else
+        if mem_value == value 
+          match_array << node
+        end
+      end
+      node = node.parent
+    end
+    puts "We found #{match_array.length} match(es)"
+
+    match_array.each do |node|
+      puts "node: name - #{node.name}, classes - #{node.classes}, id - #{node.id}"
+    end
+  end
+
+
+  # search_by(:classes, "foo")
+  def search_by(attribute, value, node = @tree.root)
     stack = []
+    # node = @tree.root
     stack << node
-    count_array = []
-    name_arr = []
+    match_array = []
+    # name_arr = []
+    mem_value = false
 
     until stack.empty?
       node = stack.pop
 
-      if node.name == value
-        count_array << [node.name, value]
-        # return count_array
-      else
-
-      # unless node.children.empty?
+      unless node.children.empty?
         node.children.each do |child|
           stack<<child
-          count_array<<child
-          name_arr << child.name
+
+          child.each_pair do |member,val|
+            if member == attribute
+              mem_value = val
+            end
+          end
+
+          #if :class mem_value ["foo", "bold"]
+          if mem_value.is_a?(Array)
+              if mem_value.include?(value)
+                  match_array << child
+              end
+          else
+            if mem_value == value 
+              match_array << child
+            end
+          end
+
         end
       end
     end
-    print "\n\nCount Array = #{count_array}\n"
+
+
+    puts "We found #{match_array.length} match(es)"
+
+    match_array.each do |node|
+      puts "node: name - #{node.name}, classes - #{node.classes}, id - #{node.id}"
+    end
 
   end
 
-
-
 end
 
-# p = Parse.new
-# string = '<p class="foo bar class_2" id="baz" >Hello</p>'
-# string2 = "<html> <head> <title> This is a test page </title> </head> </html>"
+tree = Parse.new
+# r = NodeRender.new(tree)
+# r.render(tree.root.children[0])
 
-# # p.read_doc(string2)
-# p.read_doc(string)
-
+search = TreeSearcher.new(tree)
+search.search_by(:id, "main-area")
+search.search_by(:name, "div")
+search.search_by(:classes, "foo")
+search.search_ancestors(tree.root.children[-1].children[-1].children[-1],:name, "html" )
 
 
 
