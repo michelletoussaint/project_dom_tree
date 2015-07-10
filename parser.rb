@@ -3,28 +3,22 @@ Node = Struct.new(:name, :text, :classes, :id, :children, :parent)
 
 class Parse
 
-  attr_accessor :n, :root, :children, :name
+  attr_accessor :root
 
   def initialize
 
-    
     file = import_file
     @array = convert_to_array(file)
-    # puts @array.inspect
-    # puts @array[0]
-    # @root = create_node(@array[0])
     @root = Node.new("html", nil, nil, nil, [], nil)
-    # @root = Node.new()
-    # puts @root.inspect
     build_tree(@root)
 
   end
 
   def build_tree(root)
     count = 0
-    #parents weird
     node = root
     parent = root
+
     @array[1..-1].each do |tag|
       # puts tag
       if tag.include?("</")
@@ -32,22 +26,19 @@ class Parse
         node = node.parent
         # print " and now and node #{node}\n"
       elsif tag.include?("<")
-        # node = parent
         new_node = create_node(tag)
         count += 1
         new_node.parent = node
         node.children << new_node
         node = node.children[-1]
-        # node.parent = parent
       else
         node.text = tag
       end
-      # print "new_node"
-      #   puts new_node.inspect
-      #   print "node"
-      #   puts node.inspect
+
     end
+
     print "node amount = #{count}\n"
+
   end
           
 
@@ -59,10 +50,6 @@ class Parse
     puts content.inspect
     content = content.gsub(/\s+/, " ")
 
-
-  end
-
-  def write_to
   end
 
 
@@ -93,17 +80,21 @@ class Parse
 
   def create_node(string)
     n = Node.new
+    
     unless string.match(/<(\w*?)[\s|>]/).nil?
       n.name = string.match(/<(\w*?)[\s|>]/).captures.first
     end
     # @n.text = string.match(/>(.*?)<\//).captures.first
+    
     unless string.match(/class="(.*?)"/).nil?
       n.classes = string.match(/class="(.*?)"/).captures.first.split(" ")
     end
+    
     unless string.match(/id="(.*?)"/).nil?
       n.id = string.match(/id="(.*?)"/).captures.first
     end
     n.children = []
+    
     n
 
   end
@@ -121,7 +112,9 @@ class NodeRender
     stack << node
     count_array = []
     name_arr = []
-    print "node attr: #{node.name}, #{node.classes}, #{node.id}, #{node.parent.name}\n"
+
+    print "Node Attributes: name = #{node.name}, classes = #{node.classes}, id = #{node.id}, parent = #{node.parent.name}\n"
+
     until stack.empty?
       node = stack.pop
 
@@ -133,6 +126,7 @@ class NodeRender
         end
       end
     end
+
     uniq_arr = name_arr.uniq
     uniq_arr.each do |thing|
       print "#{thing} was found #{name_arr.count(thing)} times\n"
@@ -140,9 +134,7 @@ class NodeRender
     end
     print "#{count_array.length}\n"
 
-
   end
-
 end
 
 class TreeSearcher
@@ -179,6 +171,7 @@ class TreeSearcher
       end
       node = node.parent
     end
+
     puts "We found #{match_array.length} match(es)"
 
     match_array.each do |node|
@@ -187,13 +180,10 @@ class TreeSearcher
   end
 
 
-  # search_by(:classes, "foo")
   def search_by(attribute, value, node = @tree.root)
     stack = []
-    # node = @tree.root
     stack << node
     match_array = []
-    # name_arr = []
     mem_value = false
 
     until stack.empty?
@@ -209,7 +199,6 @@ class TreeSearcher
             end
           end
 
-          #if :class mem_value ["foo", "bold"]
           if mem_value.is_a?(Array)
               if mem_value.include?(value)
                   match_array << child
@@ -224,7 +213,6 @@ class TreeSearcher
       end
     end
 
-
     puts "We found #{match_array.length} match(es)"
 
     match_array.each do |node|
@@ -235,15 +223,15 @@ class TreeSearcher
 
 end
 
-tree = Parse.new
+# tree = Parse.new
 # r = NodeRender.new(tree)
 # r.render(tree.root.children[0])
 
-search = TreeSearcher.new(tree)
-search.search_by(:id, "main-area")
-search.search_by(:name, "div")
-search.search_by(:classes, "foo")
-search.search_ancestors(tree.root.children[-1].children[-1].children[-1],:name, "html" )
+# search = TreeSearcher.new(tree)
+# search.search_by(:id, "main-area")
+# search.search_by(:name, "div")
+# search.search_by(:classes, "foo")
+# search.search_ancestors(tree.root.children[-1].children[-1].children[-1],:name, "html" )
 
 
 
