@@ -10,12 +10,12 @@ class Parse
     
     file = import_file
     @array = convert_to_array(file)
-    puts @array.inspect
-    puts @array[0]
+    # puts @array.inspect
+    # puts @array[0]
     # @root = create_node(@array[0])
     @root = Node.new("html", nil, nil, nil, [], nil)
     # @root = Node.new()
-    puts @root.inspect
+    # puts @root.inspect
     build_tree(@root)
 
   end
@@ -24,26 +24,28 @@ class Parse
     count = 0
     #parents weird
     node = root
-    parent = node
+    parent = root
     @array[1..-1].each do |tag|
-      puts tag
+      # puts tag
       if tag.include?("</")
+        print "was in node #{node}"
         node = node.parent
+        print " and now and node #{node}\n"
       elsif tag.include?("<")
-        node = parent
+        # node = parent
         new_node = create_node(tag)
         count += 1
-        # new_node.parent = node
+        new_node.parent = node
         node.children << new_node
         node = node.children[-1]
-        node.parent = parent
+        # node.parent = parent
       else
         node.text = tag
       end
-      print "new_node"
-        puts new_node.inspect
-        print "node"
-        puts node.inspect
+      # print "new_node"
+      #   puts new_node.inspect
+      #   print "node"
+      #   puts node.inspect
     end
     print "node amount = #{count}\n"
   end
@@ -88,8 +90,9 @@ class Parse
 
   def create_node(string)
     n = Node.new
-    n.name = string.match(/<(\w*?)[\s|>]/).captures.first
-
+    unless string.match(/<(\w*?)[\s|>]/).nil?
+      n.name = string.match(/<(\w*?)[\s|>]/).captures.first
+    end
     # @n.text = string.match(/>(.*?)<\//).captures.first
     unless string.match(/class="(.*?)"/).nil?
       n.classes = string.match(/class="(.*?)"/).captures.first.split(" ")
