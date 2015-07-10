@@ -35,11 +35,20 @@ regex = /id="(.*?)"/
       html
         |
   [head, body]
-  | |
-  [title] [div]
-  |
-  [h1, p]
+  |           |
+[title]     [div]
+                  |
+                [h1, p]
 
+1. stack = [html]
+2, stack = [head, body]
+3. stack = [head, div]
+4. stack = [head, h1, p]
+5. srtack = [head, h1]
+6. stack = [head]
+7. stack = [title]
+8. finsih beacause stack is empty
+6. return count_array =[array] = howe many nodes and what tyoe of nodes
 
 "<html><head><div><div></div><li></li></div></head></html>"
 
@@ -113,6 +122,36 @@ build tree
     if closing tag
       node = node.parent #parnt stays updated
       delete file(tag)
+
+/\s+/, ""\]
+
+
+
+
+
+          html
+            |
+          [head, body]
+
+
+
+node renderer
+
+  def render(node)
+
+    stack = []
+    stack << node
+
+    while stack.not_empty?
+
+      node = stack.pop
+
+      node.children.each do |child|
+        stack<<child
+
+      if children.is empty?
+        mpde = node.parent
+
 
 
 

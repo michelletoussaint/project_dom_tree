@@ -28,9 +28,9 @@ class Parse
     @array[1..-1].each do |tag|
       # puts tag
       if tag.include?("</")
-        print "was in node #{node}"
+        # print "was in node #{node}"
         node = node.parent
-        print " and now and node #{node}\n"
+        # print " and now and node #{node}\n"
       elsif tag.include?("<")
         # node = parent
         new_node = create_node(tag)
@@ -104,6 +104,75 @@ class Parse
     n
 
   end
+
+end
+
+class NodeRender
+
+  def initialize(tree)
+    @tree = tree
+  end
+
+  def render(node = @tree.root)
+    stack = []
+    stack << node
+    count_array = []
+    name_arr = []
+    print "node attr: #{node.name}, #{node.classes}, #{node.id}, #{node.parent.name}\n"
+    until stack.empty?
+      node = stack.pop
+
+      unless node.children.empty?
+        node.children.each do |child|
+          stack<<child
+          count_array<<child
+          name_arr << child.name
+        end
+      end
+    end
+    uniq_arr = name_arr.uniq
+    uniq_arr.each do |thing|
+      print "#{thing} was found #{name_arr.count(thing)} times\n"
+      # print "#{thing.name}\n"
+    end
+    print "#{count_array.length}\n"
+
+
+  end
+
+end
+
+class TreeSearcher
+
+  def initialize(tree)
+    @tree = tree
+  end
+
+  search(:classes)
+  def search_by(attribute, value)
+    stack = []
+    stack << node
+    count_array = []
+    name_arr = []
+
+    until stack.empty?
+      node = stack.pop
+  
+      if node.attribute == value
+
+      unless node.children.empty?
+        node.children.each do |child|
+          stack<<child
+          count_array<<child
+          name_arr << child.name
+        end
+      end
+    end
+
+
+  end
+
+
 
 end
 
