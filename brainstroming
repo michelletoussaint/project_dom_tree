@@ -91,5 +91,44 @@ root document
 node = html
 
 
+node = docment
+parent =node
+file = <html><head><title></title></head><body><div></div></body>
+
+build tree
+
+  arr
+
+    read_tag(tag)
+
+    stack << tag
+
+    node.children << tag
+
+
+    node = node.chidren[-1]
+    node.parent = parent
+    delete file(tag.length)
+
+    if closing tag
+      node = node.parent #parnt stays updated
+      delete file(tag)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
