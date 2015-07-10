@@ -148,41 +148,61 @@ class TreeSearcher
     @tree = tree
   end
 
-  search(:classes)
+  # search_by(:classes, "foo")
   def search_by(attribute, value)
     stack = []
+    node = @tree.root
     stack << node
-    count_array = []
-    name_arr = []
+    match_array = []
+    # name_arr = []
+    mem_value = false
 
     until stack.empty?
       node = stack.pop
-  
-      if node.attribute == value
 
       unless node.children.empty?
         node.children.each do |child|
           stack<<child
-          count_array<<child
-          name_arr << child.name
+
+          child.each_pair do |member,val|
+            if member == attribute
+              mem_value = val
+            end
+          end
+
+          #if :class mem_value ["foo", "bold"]
+          if mem_value.is_a?(Array)
+              if mem_value.include?(value)
+                  match_array << child
+              end
+          else
+            if mem_value == value 
+              match_array << child
+            end
+          end
+
         end
       end
     end
 
+    puts "We found #{match_array.length} match(es)"
+
+    match_array.each do |node|
+      puts "node: name - #{node.name}, classes - #{node.classes}, id - #{node.id}"
+    end
 
   end
 
-
-
 end
 
-# p = Parse.new
-# string = '<p class="foo bar class_2" id="baz" >Hello</p>'
-# string2 = "<html> <head> <title> This is a test page </title> </head> </html>"
+tree = Parse.new
+# r = NodeRender.new(tree)
+# r.render(tree.root.children[0])
 
-# # p.read_doc(string2)
-# p.read_doc(string)
-
+search = TreeSearcher.new(tree)
+search.search_by(:id, "main-area")
+search.search_by(:name, "div")
+search.search_by(:classes, "foo")
 
 
 
