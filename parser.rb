@@ -3,7 +3,7 @@ Node = Struct.new(:name, :text, :classes, :id, :children, :parent)
 
 class Parse
 
-  attr_accessor :n, :root, :children
+  attr_accessor :n, :root, :children, :name
 
   def initialize
 
@@ -144,12 +144,15 @@ end
 
 class TreeSearcher
 
+  attr_accessor :attribute
+
   def initialize(tree)
     @tree = tree
   end
 
-  search(:classes)
-  def search_by(attribute, value)
+  # search(:classes)
+  def search_by(name, value)
+    node = @tree.root
     stack = []
     stack << node
     count_array = []
@@ -157,10 +160,13 @@ class TreeSearcher
 
     until stack.empty?
       node = stack.pop
-  
-      if node.attribute == value
 
-      unless node.children.empty?
+      if node.name == value
+        count_array << [node.name, value]
+        # return count_array
+      else
+
+      # unless node.children.empty?
         node.children.each do |child|
           stack<<child
           count_array<<child
@@ -168,7 +174,7 @@ class TreeSearcher
         end
       end
     end
-
+    print "\n\nCount Array = #{count_array}\n"
 
   end
 
