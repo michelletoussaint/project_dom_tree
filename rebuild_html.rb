@@ -9,17 +9,20 @@ class Rebuild
 
   def depth(node)
     depth = 0
+    # puts "node: #{node.name} "
     until node == nil
-      node = node.parent
       depth +=1
+      node = node.parent
     end
+    puts " depth is : #{depth} "
+    depth
   end
 
   def rebuild(node)
     # node = node
     html = ""
     stack = []
-    # tags_to_close =[]
+    tags_to_close =[]
     stack << node
 
     until stack.empty? 
@@ -33,7 +36,10 @@ class Rebuild
 
 
       html << create_opening_tag(node)
-      # tags_to_close << node.name
+      if node.text != nil
+        html << " " + node.text + " "
+      end
+      tags_to_close << node
       
       print "html before close_tag: #{html} and stack length = #{stack.length}\n\n\n\n"
 
@@ -44,7 +50,33 @@ class Rebuild
           # puts "Adding child #{node.children[index].name}"
 
         end
-
+      else
+        current_node_depth = depth(node)
+        print " cuurent node: #{node.name} "
+        if stack.empty?
+          future_node_depth = 1
+        else
+          future_node_depth = depth(stack[-1])
+        end
+        # print " future node = #{stack[-1].name} "
+        depth_levels = current_node_depth - future_node_depth
+        print " depth levels: #{depth_levels} "
+        if depth_levels == 0
+          html << create_closing_tag(node)
+        else
+          # print "hihihihih"
+          (depth_levels+1).times do 
+            if node == nil
+              # html<<"stuff happened!"
+            else
+            # html << create_closing_tag(tags_to_close.pop)
+              print "node name: #{node.name}"
+              html << create_closing_tag(node)
+              node = node.parent
+            end
+          end
+        end
+      end 
       # else
         
       #   html << create_closing_tag(node)
@@ -65,9 +97,14 @@ class Rebuild
       #     end
       #   end
         # end
-      end
     end
     print "final html: #{html}\n\n\n"
+    html
+    output(html)
+  end
+
+  def output(string)
+    File.open("output.html", 'w') { |file| file.write(string) }
   end
 
 
@@ -96,7 +133,7 @@ class Rebuild
   def create_closing_tag(node)
 
     string = "</" + node.name + "> "
-  
+    
   end
 
 end

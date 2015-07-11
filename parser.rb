@@ -11,7 +11,7 @@ class Parse
     @array = convert_to_array(file)
     @root = Node.new("html", nil, nil, nil, [], nil)
     build_tree(@root)
-
+    puts @array[1..-1].inspect
   end
 
   def build_tree(root)
